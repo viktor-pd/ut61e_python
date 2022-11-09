@@ -416,7 +416,7 @@ def main():
     """
     import argparse
     parser = argparse.ArgumentParser(description='Utility for parsing data from multimeters based on Cyrustek ES51922 chipset.')
-    parser.add_argument('-m', '--mode', choices=['csv', 'readable'],
+    parser.add_argument('-m', '--mode', choices=['csv', 'readable','bare','baresingle'],
                         default="csv",
                         help='output mode (default: csv)')
     parser.add_argument('-f', '--file',
@@ -463,12 +463,17 @@ def main():
             if args.mode == 'csv':
                 line = output_csv(results)
                 output_file.write("{};{}\n".format(timestamp, line))
-            elif args.mode == 'readable':
-                pass
+            # elif args.mode == 'readable':
+            #     pass
+            # else:
+            #     raise NotImplementedError
+            if args.mode=='bare' or args.mode=='baresingle':
+                print(results['value'])
+                if args.mode=='baresingle':
+                    break
             else:
-                raise NotImplementedError
-            line = output_readable(results)
-            print(timestamp.split(" ")[1], line)
+                line = output_readable(results)
+                print(timestamp.split(" ")[1], line)
         elif line:
             logging.warning('Unknown packet from multimeter: "{}"'.format(line))
         else:

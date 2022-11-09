@@ -94,14 +94,20 @@ def main():
                     sys.stdout.flush()
         except KeyboardInterrupt:
             logging.info("You pressed CTRL-C, stopping...")
+        except BrokenPipeError:
+            logging.info("Write pipe closed, exiting...")
+        except Exception as ex:
+            print (ex)
         
         logging.info("Closing device")
-        h.close()
+        # h.close()
     
     except usb.core.USBError as ex:
         logging.error("USB Error occured: " + str(ex))
     except Exception as ex:
         logging.error(ex)
+
+    sys.stderr.close() # keep silent at closed pipe
 
 if __name__ == "__main__":
     main()
